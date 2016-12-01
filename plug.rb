@@ -1,41 +1,48 @@
-require 'pi_piper'
+#!/usr/bin/env ruby
+require 'rpi_gpio'
 
-pin = PiPiper::Pin.new(pin: 21, direction: :out)
-pin.off
+PIN_NUM = 21
 
-at_exit { `echo 21 > /sys/class/gpio/unexport` }
+RPi::GPIO.set_numbering :bcm
+RPi::GPIO.setup PIN_NUM, :as => :output, :initialize => :low
 
-include PiPiper
+# this needs to be defined before Sinatra does it's initialization or we won't get the chance to run this
+at_exit do
+  # close the pin "device" so it can be used again later
+  # the PiPiper does not seem to have any way to close the pin device, so we'll do it manually
+  release_pin
+end
 
 require 'sinatra'
 set :bind, '0.0.0.0'
-set :port, 3000
+set :port, 80
 
-before do
-  cache_control :public, :must_revalidate, :max_age => 1
-end
+set :static_cache_control, [:public, max_age: 1]
 
 get '/on' do
-	pin.on
-        take_photo
-	redirect '/#on'
+  RPi::GPIO.set_high PIN_NUM
+  take_photo
+  redirect '/#on'
 end
 
 get '/off' do
-	pin.off
-        take_photo
-	redirect '/#off'
+  RPi::GPIO.set_low PIN_NUM
+  take_photo
+  redirect '/#off'
 end
 
 get '/' do
-	erb :index
-end
-
-get '/camera.jpeg' do
-        File.read(File.join('public', 'camera.jpeg'))
+  erb :index
 end
 
 def take_photo
-        #`raspistill -vf -hf -ex auto -q 50 -w 400 -h 300 -o /home/pi/camera.jpeg`
-        `raspistill -vf -hf --nopreview --timeout 1 --width 640 --height 480 --quality 80 --output /home/pi/camera.jpeg`
+  puts 'take photo'
+  path = File.absolute_path File.join File.dirname(__FILE__), 'public', 'camera.jpeg'
+  `raspistill -o #{path}  -hf -vf --nopreview --width 640 --height 480`
 end
+
+def release_pin
+  RPi::GPIO.reset
+end
+
+take_photo
