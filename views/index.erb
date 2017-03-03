@@ -3,31 +3,41 @@
   <link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/css/bootstrap.min.css' />
   <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js'></script>
   <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.js'></script>
+  <script type='text/javascript'>
+  $(document).ready(function() {
+  $('.switch').click(function(event) {
+      $.get( $(this).attr('href') );
+      event.preventDefault();
+    });
+  });
+  </script>
   </head>
   <body style='100%'>
     <div class='container'>
       <div class='row'>
         <div class='col-sm-12' style='text-align: center;'>
           <p>
-            <img src='/camera.jpeg' />
+            <!-- <img src='/camera.jpeg' /> -->
+            <!-- <video src='http://70.79.4.250:8080/stream/video.mjpeg'></video> -->
+            <img src='http://70.79.4.250:8080/stream/video.mjpeg'/>
           </p>
         </div>
       </div>
-      
+
       <div class='row'>
-        <div class='col-sm-12'>
-          <p>
-           <a href='/on' class='switch on btn btn-success btn-lg btn-block'>On</a>
-          </p>
+        <div class='col-sm-6'>
+          <a href='/toggle?pin=19' class='switch on btn btn-success btn-lg btn-block'>On</a>
+          <br/>
+          <a href='/toggle?pin=26' class='switch off btn btn-danger btn-lg btn-block'>Off</a>
         </div>
-      
-        <div class='col-sm-12'>
-          <p>
-            <a href='/off' class='switch off btn btn-danger btn-lg btn-block'>Off</a>
-          </p>
+
+        <div class='col-sm-6'>
+          <a href='/toggle?pin=5' class='switch on btn btn-success btn-lg btn-block'>On</a>
+          <br/>
+          <a href='/toggle?pin=6' class='switch off btn btn-danger btn-lg btn-block'>Off</a>
         </div>
-      
       </div>
+      
     </div>
   </body>
 </html>
