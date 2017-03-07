@@ -1,14 +1,11 @@
 #!/usr/bin/env ruby
 require 'rpi_gpio'
 
-PIN_NUM = 21
-
 RPi::GPIO.set_numbering :bcm
-# RPi::GPIO.setup PIN_NUM, :as => :output, :initialize => :low
 
-Pins = [26, 19, 6, 5]
+Pins = [26, 19, 6, 13, 21, 20]
 Pins.each do |pin|
-  RPi::GPIO.setup pin, as: :output#, initialize: :low
+  RPi::GPIO.setup pin, as: :output, initialize: :low
 end
 
 # this needs to be defined before Sinatra does it's initialization or we won't get the chance to run this
