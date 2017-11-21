@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#!/home/pi/.rvm/rubies/ruby-2.4.1/bin/ruby
 require 'rpi_gpio'
 
 RPi::GPIO.set_numbering :bcm
